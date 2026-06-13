@@ -1,19 +1,21 @@
-use std::ffi::CString;
-use std::os::raw::{c_char, c_int};
+#![allow(non_snake_case)]
+#![allow(non_camel_case_types)]
+#![allow(non_upper_case_globals)]
 
+pub mod generated;
 pub mod rlgl;
 
+use generated::*;
+
 #[macro_export]
-/// NOTE: only &'static str
 macro_rules! cstr {
-    ($s:literal) => {{
+    ($s:expr) => {{
         use std::str::FromStr;
         std::ffi::CString::from_str($s).unwrap()
     }};
 }
 
 #[macro_export]
-/// NOTE: only &'static str
 macro_rules! screen_size {
     () => {{
         Vector2 {
@@ -23,189 +25,129 @@ macro_rules! screen_size {
     }};
 }
 
-unsafe extern "C" {
-    #[link_name = "InitWindow"]
-    fn InitWindow(width: c_int, height: c_int, title: *const c_char);
-}
 pub fn init_window(width: i32, height: i32, title: CString) {
     unsafe {
         InitWindow(width, height, title.as_ptr());
     }
 }
 
-unsafe extern "C" {
-    #[link_name = "CloseWindow"]
-    fn CloseWindow();
-}
 pub fn close_window() {
     unsafe {
         CloseWindow();
     }
 }
 
-unsafe extern "C" {
-    #[link_name = "WindowShouldClose"]
-    fn WindowShouldClose() -> bool;
-}
 pub fn window_should_close() -> bool {
     unsafe { WindowShouldClose() }
 }
 
-unsafe extern "C" {
-    #[link_name = "BeginDrawing"]
-    fn BeginDrawing();
-}
 pub fn begin_drawing() {
     unsafe { BeginDrawing() }
 }
 
-unsafe extern "C" {
-    #[link_name = "EndDrawing"]
-    fn EndDrawing();
-}
 pub fn end_drawing() {
     unsafe { EndDrawing() }
 }
 
-unsafe extern "C" {
-    #[link_name = "ClearBackground"]
-    fn ClearBackground(color: Color);
-}
 pub fn clear_background(color: Color) {
     unsafe { ClearBackground(color) }
 }
 
-unsafe extern "C" {
-    #[link_name = "DrawFPS"]
-    fn DrawFPS(posX: c_int, posY: c_int);
-}
 pub fn draw_fps(pos_x: i32, pos_y: i32) {
     unsafe { DrawFPS(pos_x, pos_y) }
 }
 
-unsafe extern "C" {
-    #[link_name = "SetTargetFPS"]
-    fn SetTargetFPS(fps: c_int);
-}
 pub fn set_target_fps(fps: i32) {
     unsafe { SetTargetFPS(fps) }
 }
 
-unsafe extern "C" {
-    #[link_name = "IsMouseButtonDown"]
-    fn IsMouseButtonDown(button: c_int) -> bool;
-}
 pub fn is_mouse_button_down(button: MouseButton) -> bool {
     unsafe { IsMouseButtonDown(button as i32) }
 }
 
-unsafe extern "C" {
-    #[link_name = "GetMouseDelta"]
-    fn GetMouseDelta() -> Vector2;
-}
 pub fn get_mouse_delta() -> Vector2 {
     unsafe { GetMouseDelta() }
 }
 
-unsafe extern "C" {
-    #[link_name = "GetMouseWheelMove"]
-    fn GetMouseWheelMove() -> f32;
-}
 pub fn get_mouse_wheel_move() -> f32 {
     unsafe { GetMouseWheelMove() }
 }
 
-unsafe extern "C" {
-    #[link_name = "GetMousePosition"]
-    fn GetMousePosition() -> Vector2;
-}
 pub fn get_mouse_position() -> Vector2 {
     unsafe { GetMousePosition() }
 }
 
-unsafe extern "C" {
-    #[link_name = "GetScreenToWorld2D"]
-    fn GetScreenToWorld2D(position: Vector2, camera: Camera2D) -> Vector2;
-}
 pub fn get_screen_to_world_2d(position: Vector2, camera: Camera2D) -> Vector2 {
     unsafe { GetScreenToWorld2D(position, camera) }
 }
 
-unsafe extern "C" {
-    #[link_name = "BeginMode2D"]
-    fn BeginMode2D(camera: Camera2D);
-}
 pub fn begin_mode_2d(camera: Camera2D) {
     unsafe { BeginMode2D(camera) }
 }
 
-unsafe extern "C" {
-    #[link_name = "EndMode2D"]
-    fn EndMode2D();
-}
 pub fn end_mode_2d() {
     unsafe { EndMode2D() }
 }
 
-unsafe extern "C" {
-    #[link_name = "DrawGrid"]
-    fn DrawGrid(slices: c_int, spacing: f32);
-}
 pub fn draw_grid(slices: i32, spacing: f32) {
     unsafe { DrawGrid(slices, spacing) }
 }
 
-unsafe extern "C" {
-    #[link_name = "DrawCircleV"]
-    fn DrawCircle(position: Vector2, radius: f32, color: Color);
-}
-pub fn draw_circle(position: Vector2, radius: f32, color: Color) {
-    unsafe { DrawCircle(position, radius, color) }
+pub fn draw_circle_v(position: Vector2, radius: f32, color: Color) {
+    unsafe { DrawCircleV(position, radius, color) }
 }
 
-unsafe extern "C" {
-    #[link_name = "DrawLineV"]
-    fn DrawLineV(startPos: Vector2, endPos: Vector2, color: Color);
-}
 pub fn draw_line(start: Vector2, end: Vector2, color: Color) {
     unsafe { DrawLineV(start, end, color) }
 }
 
-unsafe extern "C" {
-    #[link_name = "GetScreenWidth"]
-    fn GetScreenWidth() -> c_int;
-}
 pub fn get_screen_width() -> i32 {
     unsafe { GetScreenWidth() }
 }
 
-unsafe extern "C" {
-    #[link_name = "GetScreenHeight"]
-    fn GetScreenHeight() -> c_int;
-}
 pub fn get_screen_height() -> i32 {
     unsafe { GetScreenHeight() }
 }
 
-unsafe extern "C" {
-    #[link_name = "GetFrameTime"]
-    fn GetFrameTime() -> f32;
-}
 pub fn get_frame_time() -> f32 {
     unsafe { GetFrameTime() }
 }
 
-
-#[derive(Default, Clone, Copy)]
-#[repr(C)]
-pub struct Color {
-    pub r: u8,
-    pub g: u8,
-    pub b: u8,
-    pub a: u8,
+pub fn is_key_down(key: KeyboardKey) -> bool {
+    unsafe { IsKeyDown(key as i32) }
 }
 
-impl Color {}
+pub fn is_key_pressed(key: KeyboardKey) -> bool {
+    unsafe { IsKeyPressed(key as i32) }
+}
+
+pub fn is_mouse_button_pressed(button: MouseButton) -> bool {
+    unsafe { IsMouseButtonPressed(button as i32) }
+}
+
+pub fn draw_rectangle(pos_x: i32, pos_y: i32, width: i32, height: i32, color: Color) {
+    unsafe { DrawRectangle(pos_x, pos_y, width, height, color) }
+}
+
+pub fn draw_rectangle_lines(pos_x: i32, pos_y: i32, width: i32, height: i32, color: Color) {
+    unsafe { DrawRectangleLines(pos_x, pos_y, width, height, color) }
+}
+
+pub fn draw_rectangle_lines_ex(rec: Rectangle, line_thick: f32, color: Color) {
+    unsafe { DrawRectangleLinesEx(rec, line_thick, color) }
+}
+
+pub fn draw_text(text: CString, pos_x: i32, pos_y: i32, font_size: i32, color: Color) {
+    unsafe { DrawText(text.as_ptr(), pos_x, pos_y, font_size, color) }
+}
+
+pub fn measure_text(text: CString, font_size: i32) -> i32 {
+    unsafe { MeasureText(text.as_ptr(), font_size) }
+}
+
+pub fn measure_text_ex(font: Font, text: CString, fontSize: f32, spacing: f32) -> Vector2 {
+    unsafe { MeasureTextEx(font, text.as_ptr(), fontSize, spacing) }
+}
 
 // Some Basic Colors
 // NOTE: Custom raylib color palette for amazing visuals on WHITE background
@@ -359,18 +301,18 @@ pub const MAGENTA: Color = Color {
     b: 255,
     a: 255,
 }; // Magenta
+/// (raylib WHITE)
 pub const RAYWHITE: Color = Color {
     r: 245,
     g: 245,
     b: 245,
     a: 255,
-}; // My own White (raylib logo)
+};
 
-#[derive(Debug, Default, Clone, Copy)]
-#[repr(C)]
-pub struct Vector2 {
-    pub x: f32,
-    pub y: f32,
+impl std::default::Default for Vector2 {
+    fn default() -> Self {
+        Vector2 { x: 0.0, y: 0.0 }
+    }
 }
 
 impl std::ops::Add for Vector2 {
@@ -398,21 +340,17 @@ impl Vector2 {
     }
 }
 
-#[derive(Debug, Default, Clone, Copy)]
-#[repr(C)]
-/// Camera2D, defines position/orientation in 2d space
-pub struct Camera2D {
-    /// Camera offset (screen space offset from window origin)
-    pub offset: Vector2,
-    /// Camera target (world space target point that is mapped to screen space offset)
-    pub target: Vector2,
-    /// Camera rotation in degrees (pivots around target)
-    pub rotation: f32,
-    /// Camera zoom (scaling around target), must not be set to 0, set to 1.0f for no scale
-    pub zoom: f32,
+impl Rectangle {
+    pub fn new(x: f32, y: f32, width: f32, height: f32) -> Self {
+        Self {
+            x,
+            y,
+            width,
+            height,
+        }
+    }
 }
 
-#[allow(non_camel_case_types)]
 #[derive(Debug, Default, Clone, Copy)]
 #[repr(C)]
 /// Mouse buttons
@@ -433,107 +371,129 @@ pub enum MouseButton {
     /// Mouse button back (advanced mouse device)
     MOUSE_BUTTON_BACK = 6,
 }
+use std::ffi::CString;
+
 pub use MouseButton::*;
 
-#[derive(Debug, Default, Clone, Copy)]
+#[derive(Default, Clone, Copy)]
 #[repr(C)]
-pub struct Rectangle {
-    pub x: f32,
-    pub y: f32,
-    pub width: f32,
-    pub height: f32,
+/// Keyboard keys (US keyboard layout)
+/// NOTE: Use GetKeyPressed() to allow redefining required keys for alternative layouts
+pub enum KeyboardKey {
+    #[default]
+    KEY_NULL = 0, // Key: NULL, used for no key pressed
+    // Alphanumeric keys
+    KEY_APOSTROPHE = 39,    // Key: '
+    KEY_COMMA = 44,         // Key: ,
+    KEY_MINUS = 45,         // Key: -
+    KEY_PERIOD = 46,        // Key: .
+    KEY_SLASH = 47,         // Key: /
+    KEY_ZERO = 48,          // Key: 0
+    KEY_ONE = 49,           // Key: 1
+    KEY_TWO = 50,           // Key: 2
+    KEY_THREE = 51,         // Key: 3
+    KEY_FOUR = 52,          // Key: 4
+    KEY_FIVE = 53,          // Key: 5
+    KEY_SIX = 54,           // Key: 6
+    KEY_SEVEN = 55,         // Key: 7
+    KEY_EIGHT = 56,         // Key: 8
+    KEY_NINE = 57,          // Key: 9
+    KEY_SEMICOLON = 59,     // Key: ;
+    KEY_EQUAL = 61,         // Key: =
+    KEY_A = 65,             // Key: A | a
+    KEY_B = 66,             // Key: B | b
+    KEY_C = 67,             // Key: C | c
+    KEY_D = 68,             // Key: D | d
+    KEY_E = 69,             // Key: E | e
+    KEY_F = 70,             // Key: F | f
+    KEY_G = 71,             // Key: G | g
+    KEY_H = 72,             // Key: H | h
+    KEY_I = 73,             // Key: I | i
+    KEY_J = 74,             // Key: J | j
+    KEY_K = 75,             // Key: K | k
+    KEY_L = 76,             // Key: L | l
+    KEY_M = 77,             // Key: M | m
+    KEY_N = 78,             // Key: N | n
+    KEY_O = 79,             // Key: O | o
+    KEY_P = 80,             // Key: P | p
+    KEY_Q = 81,             // Key: Q | q
+    KEY_R = 82,             // Key: R | r
+    KEY_S = 83,             // Key: S | s
+    KEY_T = 84,             // Key: T | t
+    KEY_U = 85,             // Key: U | u
+    KEY_V = 86,             // Key: V | v
+    KEY_W = 87,             // Key: W | w
+    KEY_X = 88,             // Key: X | x
+    KEY_Y = 89,             // Key: Y | y
+    KEY_Z = 90,             // Key: Z | z
+    KEY_LEFT_BRACKET = 91,  // Key: [
+    KEY_BACKSLASH = 92,     // Key: '\'
+    KEY_RIGHT_BRACKET = 93, // Key: ]
+    KEY_GRAVE = 96,         // Key: `
+    // Function keys
+    KEY_SPACE = 32,          // Key: Space
+    KEY_ESCAPE = 256,        // Key: Esc
+    KEY_ENTER = 257,         // Key: Enter
+    KEY_TAB = 258,           // Key: Tab
+    KEY_BACKSPACE = 259,     // Key: Backspace
+    KEY_INSERT = 260,        // Key: Ins
+    KEY_DELETE = 261,        // Key: Del
+    KEY_RIGHT = 262,         // Key: Cursor right
+    KEY_LEFT = 263,          // Key: Cursor left
+    KEY_DOWN = 264,          // Key: Cursor down
+    KEY_UP = 265,            // Key: Cursor up
+    KEY_PAGE_UP = 266,       // Key: Page up
+    KEY_PAGE_DOWN = 267,     // Key: Page down
+    KEY_HOME = 268,          // Key: Home
+    KEY_END = 269,           // Key: End
+    KEY_CAPS_LOCK = 280,     // Key: Caps lock
+    KEY_SCROLL_LOCK = 281,   // Key: Scroll down
+    KEY_NUM_LOCK = 282,      // Key: Num lock
+    KEY_PRINT_SCREEN = 283,  // Key: Print screen
+    KEY_PAUSE = 284,         // Key: Pause
+    KEY_F1 = 290,            // Key: F1
+    KEY_F2 = 291,            // Key: F2
+    KEY_F3 = 292,            // Key: F3
+    KEY_F4 = 293,            // Key: F4
+    KEY_F5 = 294,            // Key: F5
+    KEY_F6 = 295,            // Key: F6
+    KEY_F7 = 296,            // Key: F7
+    KEY_F8 = 297,            // Key: F8
+    KEY_F9 = 298,            // Key: F9
+    KEY_F10 = 299,           // Key: F10
+    KEY_F11 = 300,           // Key: F11
+    KEY_F12 = 301,           // Key: F12
+    KEY_LEFT_SHIFT = 340,    // Key: Shift left
+    KEY_LEFT_CONTROL = 341,  // Key: Control left
+    KEY_LEFT_ALT = 342,      // Key: Alt left
+    KEY_LEFT_SUPER = 343,    // Key: Super left
+    KEY_RIGHT_SHIFT = 344,   // Key: Shift right
+    KEY_RIGHT_CONTROL = 345, // Key: Control right
+    KEY_RIGHT_ALT = 346,     // Key: Alt right
+    KEY_RIGHT_SUPER = 347,   // Key: Super right
+    KEY_KB_MENU = 348,       // Key: KB menu
+    // Keypad keys
+    KEY_KP_0 = 320,        // Key: Keypad 0
+    KEY_KP_1 = 321,        // Key: Keypad 1
+    KEY_KP_2 = 322,        // Key: Keypad 2
+    KEY_KP_3 = 323,        // Key: Keypad 3
+    KEY_KP_4 = 324,        // Key: Keypad 4
+    KEY_KP_5 = 325,        // Key: Keypad 5
+    KEY_KP_6 = 326,        // Key: Keypad 6
+    KEY_KP_7 = 327,        // Key: Keypad 7
+    KEY_KP_8 = 328,        // Key: Keypad 8
+    KEY_KP_9 = 329,        // Key: Keypad 9
+    KEY_KP_DECIMAL = 330,  // Key: Keypad .
+    KEY_KP_DIVIDE = 331,   // Key: Keypad /
+    KEY_KP_MULTIPLY = 332, // Key: Keypad *
+    KEY_KP_SUBTRACT = 333, // Key: Keypad -
+    KEY_KP_ADD = 334,      // Key: Keypad +
+    KEY_KP_ENTER = 335,    // Key: Keypad Enter
+    KEY_KP_EQUAL = 336,    // Key: Keypad =
+    // Android key buttons
+    KEY_BACK = 4,         // Key: Android back button
+    KEY_MENU = 5,         // Key: Android menu button
+    KEY_VOLUME_UP = 24,   // Key: Android volume up button
+    KEY_VOLUME_DOWN = 25, // Key: Android volume down button
 }
-
-impl Rectangle {
-    pub fn new(x: f32, y: f32, width: f32, height: f32) -> Self {
-        Self { x, y, width, height }
-    }
-}
-
-// Keyboard Keys Constants
-pub const KEY_W: i32 = 87;
-pub const KEY_A: i32 = 65;
-pub const KEY_S: i32 = 83;
-pub const KEY_D: i32 = 68;
-pub const KEY_Q: i32 = 81;
-pub const KEY_E: i32 = 69;
-pub const KEY_R: i32 = 82;
-pub const KEY_ONE: i32 = 49;
-pub const KEY_TWO: i32 = 50;
-pub const KEY_THREE: i32 = 51;
-pub const KEY_FOUR: i32 = 52;
-pub const KEY_FIVE: i32 = 53;
-
-unsafe extern "C" {
-    #[link_name = "IsKeyDown"]
-    fn IsKeyDown(key: c_int) -> bool;
-    
-    #[link_name = "IsKeyPressed"]
-    fn IsKeyPressed(key: c_int) -> bool;
-
-    #[link_name = "IsMouseButtonPressed"]
-    fn IsMouseButtonPressed(button: c_int) -> bool;
-
-    #[link_name = "DrawRectangle"]
-    fn DrawRectangle(posX: c_int, posY: c_int, width: c_int, height: c_int, color: Color);
-
-    #[link_name = "DrawRectangleLines"]
-    fn DrawRectangleLines(posX: c_int, posY: c_int, width: c_int, height: c_int, color: Color);
-
-    #[link_name = "DrawRectangleLinesEx"]
-    fn DrawRectangleLinesEx(rec: Rectangle, lineThick: f32, color: Color);
-
-    #[link_name = "DrawText"]
-    fn DrawText(text: *const c_char, posX: c_int, posY: c_int, fontSize: c_int, color: Color);
-
-    #[link_name = "MeasureText"]
-    fn MeasureText(text: *const c_char, fontSize: c_int) -> c_int;
-}
-
-pub fn is_key_down(key: i32) -> bool {
-    unsafe { IsKeyDown(key) }
-}
-
-pub fn is_key_pressed(key: i32) -> bool {
-    unsafe { IsKeyPressed(key) }
-}
-
-pub fn is_mouse_button_pressed(button: MouseButton) -> bool {
-    unsafe { IsMouseButtonPressed(button as i32) }
-}
-
-pub fn draw_rectangle(pos_x: i32, pos_y: i32, width: i32, height: i32, color: Color) {
-    unsafe { DrawRectangle(pos_x, pos_y, width, height, color) }
-}
-
-pub fn draw_rectangle_lines(pos_x: i32, pos_y: i32, width: i32, height: i32, color: Color) {
-    unsafe { DrawRectangleLines(pos_x, pos_y, width, height, color) }
-}
-
-pub fn draw_rectangle_lines_ex(rec: Rectangle, line_thick: f32, color: Color) {
-    unsafe { DrawRectangleLinesEx(rec, line_thick, color) }
-}
-
-pub fn draw_text(text: CString, pos_x: i32, pos_y: i32, font_size: i32, color: Color) {
-    unsafe { DrawText(text.as_ptr(), pos_x, pos_y, font_size, color) }
-}
-
-pub fn measure_text(text: CString, font_size: i32) -> i32 {
-    unsafe { MeasureText(text.as_ptr(), font_size) }
-}
-
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_vector_add() {
-        let v1 = Vector2 { x: 5.0, y: 10.0 };
-        let v2 = Vector2 { x: 2.0, y: 3.0 };
-        let result = v1 + v2;
-
-        assert_eq!(result.x, 7.0);
-        assert_eq!(result.y, 13.0);
-    }
-}
+pub use KeyboardKey::*;
