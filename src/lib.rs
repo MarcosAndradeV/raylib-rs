@@ -5,7 +5,7 @@
 pub mod generated;
 pub mod rlgl;
 
-use generated::*;
+pub use generated::*;
 
 #[macro_export]
 macro_rules! cstr {
