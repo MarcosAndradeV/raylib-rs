@@ -2,6 +2,8 @@
 #![allow(non_camel_case_types)]
 #![allow(non_upper_case_globals)]
 
+use std::ffi::CString;
+
 pub mod generated;
 pub mod rlgl;
 
@@ -147,6 +149,44 @@ pub fn measure_text(text: CString, font_size: i32) -> i32 {
 
 pub fn measure_text_ex(font: Font, text: CString, fontSize: f32, spacing: f32) -> Vector2 {
     unsafe { MeasureTextEx(font, text.as_ptr(), fontSize, spacing) }
+}
+
+pub fn load_texture(path: CString) -> Texture {
+    unsafe { LoadTexture(path.as_ptr()) }
+}
+pub fn get_color(hex: u32) -> Color {
+    unsafe { GetColor(hex) }
+}
+pub fn load_music_stream(path: CString) -> Music {
+    unsafe { LoadMusicStream(path.as_ptr()) }
+}
+pub fn init_audio_device() {
+    unsafe {
+        InitAudioDevice();
+    }
+}
+pub fn close_audio_device() {
+    unsafe {
+        CloseAudioDevice();
+    }
+}
+pub fn get_font_default() -> Font {
+    unsafe { GetFontDefault() }
+}
+pub fn draw_text_ex(
+    font: Font,
+    text: CString,
+    position: Vector2,
+    font_size: f32,
+    spacing: f32,
+    tint: Color,
+) {
+    unsafe {
+        DrawTextEx(font, text.as_ptr(), position, font_size, spacing, tint);
+    }
+}
+pub fn is_cursor_on_screen() -> bool {
+    unsafe { IsCursorOnScreen() }
 }
 
 // Some Basic Colors
@@ -325,6 +365,36 @@ impl std::ops::Add for Vector2 {
     }
 }
 
+impl std::ops::Sub for Vector2 {
+    type Output = Self;
+    fn sub(self, rhs: Self) -> Self::Output {
+        Vector2 {
+            x: self.x - rhs.x,
+            y: self.y - rhs.y,
+        }
+    }
+}
+
+impl std::ops::Mul for Vector2 {
+    type Output = Self;
+    fn mul(self, rhs: Self) -> Self::Output {
+        Vector2 {
+            x: self.x * rhs.x,
+            y: self.y * rhs.y,
+        }
+    }
+}
+
+impl std::ops::Div for Vector2 {
+    type Output = Self;
+    fn div(self, rhs: Self) -> Self::Output {
+        Vector2 {
+            x: self.x / rhs.x,
+            y: self.y / rhs.y,
+        }
+    }
+}
+
 impl Vector2 {
     pub fn new(x: f32, y: f32) -> Self {
         Self { x, y }
@@ -371,7 +441,6 @@ pub enum MouseButton {
     /// Mouse button back (advanced mouse device)
     MOUSE_BUTTON_BACK = 6,
 }
-use std::ffi::CString;
 
 pub use MouseButton::*;
 
