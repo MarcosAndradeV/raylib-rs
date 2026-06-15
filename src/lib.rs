@@ -201,6 +201,9 @@ pub fn unload_texture(texture: Texture2D) {
         UnloadTexture(texture);
     }
 }
+pub fn get_fps() -> i32 {
+    unsafe { GetFPS() }
+}
 
 pub fn draw_texture_ex(
     texture: Texture2D,
