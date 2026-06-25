@@ -423,6 +423,17 @@ impl std::ops::Div for Vector2 {
     }
 }
 
+impl PartialEq for Vector2 {
+    fn eq(&self, other: &Self) -> bool {
+        self.x == other.x && self.y == other.y
+    }
+    fn ne(&self, other: &Self) -> bool {
+        self.x != other.x || self.y != other.y
+    }
+}
+
+impl Eq for Vector2 {}
+
 impl Vector2 {
     pub fn new(x: f32, y: f32) -> Self {
         Self { x, y }
@@ -434,6 +445,21 @@ impl Vector2 {
         Vector2 {
             x: self.x * s,
             y: self.y * s,
+        }
+    }
+    pub fn is_zero(&self) -> bool {
+        self.x == 0.0 && self.y == 0.0
+    }
+    pub fn normalize(&self) -> Self {
+        let length = self.x.hypot(self.y);
+        if length > 0.0 {
+            let ilength = 1.0 / length;
+            Vector2 {
+                x: self.x * ilength,
+                y: self.y * ilength,
+            }
+        } else {
+            Vector2::zero()
         }
     }
 }
@@ -600,22 +626,65 @@ pub use KeyboardKey::*;
 /// By default all flags are set to 0
 #[derive(Clone, Copy)]
 #[repr(C)]
-pub enum ConfigFlags{
-    FLAG_VSYNC_HINT         = 0x00000040,   // Set to try enabling V-Sync on GPU
-    FLAG_FULLSCREEN_MODE    = 0x00000002,   // Set to run program in fullscreen
-    FLAG_WINDOW_RESIZABLE   = 0x00000004,   // Set to allow resizable window
-    FLAG_WINDOW_UNDECORATED = 0x00000008,   // Set to disable window decoration (frame and buttons)
-    FLAG_WINDOW_HIDDEN      = 0x00000080,   // Set to hide window
-    FLAG_WINDOW_MINIMIZED   = 0x00000200,   // Set to minimize window (iconify)
-    FLAG_WINDOW_MAXIMIZED   = 0x00000400,   // Set to maximize window (expanded to monitor)
-    FLAG_WINDOW_UNFOCUSED   = 0x00000800,   // Set to window non focused
-    FLAG_WINDOW_TOPMOST     = 0x00001000,   // Set to window always on top
-    FLAG_WINDOW_ALWAYS_RUN  = 0x00000100,   // Set to allow windows running while minimized
-    FLAG_WINDOW_TRANSPARENT = 0x00000010,   // Set to allow transparent framebuffer
-    FLAG_WINDOW_HIGHDPI     = 0x00002000,   // Set to support HighDPI
+pub enum ConfigFlags {
+    FLAG_VSYNC_HINT = 0x00000040,       // Set to try enabling V-Sync on GPU
+    FLAG_FULLSCREEN_MODE = 0x00000002,  // Set to run program in fullscreen
+    FLAG_WINDOW_RESIZABLE = 0x00000004, // Set to allow resizable window
+    FLAG_WINDOW_UNDECORATED = 0x00000008, // Set to disable window decoration (frame and buttons)
+    FLAG_WINDOW_HIDDEN = 0x00000080,    // Set to hide window
+    FLAG_WINDOW_MINIMIZED = 0x00000200, // Set to minimize window (iconify)
+    FLAG_WINDOW_MAXIMIZED = 0x00000400, // Set to maximize window (expanded to monitor)
+    FLAG_WINDOW_UNFOCUSED = 0x00000800, // Set to window non focused
+    FLAG_WINDOW_TOPMOST = 0x00001000,   // Set to window always on top
+    FLAG_WINDOW_ALWAYS_RUN = 0x00000100, // Set to allow windows running while minimized
+    FLAG_WINDOW_TRANSPARENT = 0x00000010, // Set to allow transparent framebuffer
+    FLAG_WINDOW_HIGHDPI = 0x00002000,   // Set to support HighDPI
     FLAG_WINDOW_MOUSE_PASSTHROUGH = 0x00004000, // Set to support mouse passthrough, only supported when FLAG_WINDOW_UNDECORATED
     FLAG_BORDERLESS_WINDOWED_MODE = 0x00008000, // Set to run program in borderless windowed mode
-    FLAG_MSAA_4X_HINT       = 0x00000020,   // Set to try enabling MSAA 4X
-    FLAG_INTERLACED_HINT    = 0x00010000    // Set to try enabling interlaced video format (for V3D)
+    FLAG_MSAA_4X_HINT = 0x00000020,             // Set to try enabling MSAA 4X
+    FLAG_INTERLACED_HINT = 0x00010000, // Set to try enabling interlaced video format (for V3D)
 }
 pub use ConfigFlags::*;
+
+pub fn set_config_flags(flags: &[ConfigFlags]) {
+    let flags = flags.iter().map(|f| *f as u32).fold(0, |acc, f| acc | f);
+    unsafe {
+        SetConfigFlags(flags);
+    }
+}
+
+#[derive(Clone, Copy)]
+#[repr(C)]
+#[allow(non_camel_case_types)]
+pub enum TextureFilter {
+    TEXTURE_FILTER_POINT = 0,
+    TEXTURE_FILTER_BILINEAR = 1,
+    TEXTURE_FILTER_TRILINEAR = 2,
+    TEXTURE_FILTER_ANISOTROPIC_4X = 3,
+    TEXTURE_FILTER_ANISOTROPIC_8X = 4,
+    TEXTURE_FILTER_ANISOTROPIC_16X = 5,
+}
+pub use TextureFilter::*;
+#[derive(Clone, Copy)]
+#[repr(C)]
+#[allow(non_camel_case_types)]
+pub enum TextureWrap {
+    TEXTURE_WRAP_REPEAT = 0,
+    TEXTURE_WRAP_CLAMP = 1,
+    TEXTURE_WRAP_MIRROR_REPEAT = 2,
+    TEXTURE_WRAP_MIRROR_CLAMP = 3,
+}
+pub use TextureWrap::*;
+
+// Color blending modes (pre-defined)
+pub enum BlendMode {
+    BLEND_ALPHA = 0,         // Blend textures considering alpha (default)
+    BLEND_ADDITIVE,          // Blend textures adding colors
+    BLEND_MULTIPLIED,        // Blend textures multiplying colors
+    BLEND_ADD_COLORS,        // Blend textures adding colors (alternative)
+    BLEND_SUBTRACT_COLORS,   // Blend textures subtracting colors (alternative)
+    BLEND_ALPHA_PREMULTIPLY, // Blend premultiplied textures considering alpha
+    BLEND_CUSTOM, // Blend textures using custom src/dst factors (use rlSetBlendFactors())
+    BLEND_CUSTOM_SEPARATE, // Blend textures using custom rgb/alpha separate src/dst factors (use rlSetBlendFactorsSeparate())
+}
+pub use BlendMode::*;

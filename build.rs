@@ -37,7 +37,9 @@ pub fn generate_bindings(modname: &str, header_file: &str) {
         .blocklist_item("KeyboardKey")
         .blocklist_item("MouseButton")
         .blocklist_item("ConfigFlags")
-        .blocklist_item("BlendMode");
+        .blocklist_item("BlendMode")
+        .blocklist_item("TextureFilter")
+        .blocklist_item("TextureWrap");
 
     let bindings = builder.generate().expect("Unable to generate bindings");
 
