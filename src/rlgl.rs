@@ -86,7 +86,7 @@ pub const RL_DEFAULT_SHADER_ATTRIB_LOCATION_BONEINDICES: u32 = 7;
 pub const RL_DEFAULT_SHADER_ATTRIB_LOCATION_BONEWEIGHTS: u32 = 8;
 pub const RL_DEFAULT_SHADER_ATTRIB_LOCATION_INSTANCETRANSFORM: u32 = 9;
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, PartialEq)]
 pub struct Matrix {
     pub m0: f32,
     pub m4: f32,
@@ -127,7 +127,7 @@ const _: () = {
     ["Offset of field: Matrix::m15"][::std::mem::offset_of!(Matrix, m15) - 60usize];
 };
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub struct rlVertexBuffer {
     pub elementCount: ::std::os::raw::c_int,
     pub vertices: *mut f32,
@@ -159,8 +159,17 @@ const _: () = {
     ["Offset of field: rlVertexBuffer::vboId"]
         [::std::mem::offset_of!(rlVertexBuffer, vboId) - 52usize];
 };
+impl Default for rlVertexBuffer {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
+    }
+}
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, PartialEq)]
 pub struct rlDrawCall {
     pub mode: ::std::os::raw::c_int,
     pub vertexCount: ::std::os::raw::c_int,
@@ -180,7 +189,7 @@ const _: () = {
         [::std::mem::offset_of!(rlDrawCall, textureId) - 12usize];
 };
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub struct rlRenderBatch {
     pub bufferCount: ::std::os::raw::c_int,
     pub currentBuffer: ::std::os::raw::c_int,
@@ -206,6 +215,15 @@ const _: () = {
     ["Offset of field: rlRenderBatch::currentDepth"]
         [::std::mem::offset_of!(rlRenderBatch, currentDepth) - 28usize];
 };
+impl Default for rlRenderBatch {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
+    }
+}
 pub const rlGlVersion_RL_OPENGL_SOFTWARE: rlGlVersion = 0;
 pub const rlGlVersion_RL_OPENGL_11: rlGlVersion = 1;
 pub const rlGlVersion_RL_OPENGL_21: rlGlVersion = 2;

@@ -27,6 +27,9 @@ pub fn generate_bindings(modname: &str, header_file: &str) {
     let builder = bindgen::Builder::default()
         .header(header_file)
         .parse_callbacks(Box::new(bindgen::CargoCallbacks::new()))
+        .derive_default(true)
+        .derive_partialeq(true)
+        .derive_debug(true)
         .blocklist_item("DEG2RAD")
         .blocklist_item("PI")
         .blocklist_item("RAD2DEG")
@@ -39,7 +42,22 @@ pub fn generate_bindings(modname: &str, header_file: &str) {
         .blocklist_item("ConfigFlags")
         .blocklist_item("BlendMode")
         .blocklist_item("TextureFilter")
-        .blocklist_item("TextureWrap");
+        .blocklist_item("TextureWrap")
+        .blocklist_item("TraceLogLevel")
+        .blocklist_item("MouseCursor")
+        .blocklist_item("GamepadButton")
+        .blocklist_item("GamepadAxis")
+        .blocklist_item("MaterialMapIndex")
+        .blocklist_item("ShaderLocationIndex")
+        .blocklist_item("ShaderUniformDataType")
+        .blocklist_item("ShaderAttributeDataType")
+        .blocklist_item("PixelFormat")
+        .blocklist_item("CubemapLayout")
+        .blocklist_item("FontType")
+        .blocklist_item("Gesture")
+        .blocklist_item("CameraMode")
+        .blocklist_item("CameraProjection")
+        .blocklist_item("NPatchLayout");
 
     let bindings = builder.generate().expect("Unable to generate bindings");
 

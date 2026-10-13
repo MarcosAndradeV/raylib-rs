@@ -7,7 +7,7 @@ pub const RAYLIB_VERSION: &[u8; 8] = b"6.1-dev\0";
 pub type __gnuc_va_list = __builtin_va_list;
 pub type va_list = __builtin_va_list;
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, PartialEq)]
 pub struct Vector2 {
     pub x: f32,
     pub y: f32,
@@ -20,7 +20,7 @@ const _: () = {
     ["Offset of field: Vector2::y"][::std::mem::offset_of!(Vector2, y) - 4usize];
 };
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, PartialEq)]
 pub struct Vector3 {
     pub x: f32,
     pub y: f32,
@@ -35,7 +35,7 @@ const _: () = {
     ["Offset of field: Vector3::z"][::std::mem::offset_of!(Vector3, z) - 8usize];
 };
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, PartialEq)]
 pub struct Vector4 {
     pub x: f32,
     pub y: f32,
@@ -53,7 +53,7 @@ const _: () = {
 };
 pub type Quaternion = Vector4;
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, PartialEq)]
 pub struct Matrix {
     pub m0: f32,
     pub m4: f32,
@@ -94,7 +94,7 @@ const _: () = {
     ["Offset of field: Matrix::m15"][::std::mem::offset_of!(Matrix, m15) - 60usize];
 };
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, PartialEq)]
 pub struct Color {
     pub r: ::std::os::raw::c_uchar,
     pub g: ::std::os::raw::c_uchar,
@@ -111,7 +111,7 @@ const _: () = {
     ["Offset of field: Color::a"][::std::mem::offset_of!(Color, a) - 3usize];
 };
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, PartialEq)]
 pub struct Rectangle {
     pub x: f32,
     pub y: f32,
@@ -128,7 +128,7 @@ const _: () = {
     ["Offset of field: Rectangle::height"][::std::mem::offset_of!(Rectangle, height) - 12usize];
 };
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub struct Image {
     pub data: *mut ::std::os::raw::c_void,
     pub width: ::std::os::raw::c_int,
@@ -146,8 +146,17 @@ const _: () = {
     ["Offset of field: Image::mipmaps"][::std::mem::offset_of!(Image, mipmaps) - 16usize];
     ["Offset of field: Image::format"][::std::mem::offset_of!(Image, format) - 20usize];
 };
+impl Default for Image {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
+    }
+}
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, PartialEq)]
 pub struct Texture {
     pub id: ::std::os::raw::c_uint,
     pub width: ::std::os::raw::c_int,
@@ -168,7 +177,7 @@ const _: () = {
 pub type Texture2D = Texture;
 pub type TextureCubemap = Texture;
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, PartialEq)]
 pub struct RenderTexture {
     pub id: ::std::os::raw::c_uint,
     pub texture: Texture,
@@ -186,7 +195,7 @@ const _: () = {
 };
 pub type RenderTexture2D = RenderTexture;
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, PartialEq)]
 pub struct NPatchInfo {
     pub source: Rectangle,
     pub left: ::std::os::raw::c_int,
@@ -207,7 +216,7 @@ const _: () = {
     ["Offset of field: NPatchInfo::layout"][::std::mem::offset_of!(NPatchInfo, layout) - 32usize];
 };
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub struct GlyphInfo {
     pub value: ::std::os::raw::c_int,
     pub offsetX: ::std::os::raw::c_int,
@@ -225,8 +234,17 @@ const _: () = {
     ["Offset of field: GlyphInfo::advanceX"][::std::mem::offset_of!(GlyphInfo, advanceX) - 12usize];
     ["Offset of field: GlyphInfo::image"][::std::mem::offset_of!(GlyphInfo, image) - 16usize];
 };
+impl Default for GlyphInfo {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
+    }
+}
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub struct Font {
     pub baseSize: ::std::os::raw::c_int,
     pub glyphCount: ::std::os::raw::c_int,
@@ -246,8 +264,17 @@ const _: () = {
     ["Offset of field: Font::recs"][::std::mem::offset_of!(Font, recs) - 32usize];
     ["Offset of field: Font::glyphs"][::std::mem::offset_of!(Font, glyphs) - 40usize];
 };
+impl Default for Font {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
+    }
+}
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, PartialEq)]
 pub struct Camera3D {
     pub position: Vector3,
     pub target: Vector3,
@@ -268,7 +295,7 @@ const _: () = {
 };
 pub type Camera = Camera3D;
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, PartialEq)]
 pub struct Camera2D {
     pub offset: Vector2,
     pub target: Vector2,
@@ -285,7 +312,7 @@ const _: () = {
     ["Offset of field: Camera2D::zoom"][::std::mem::offset_of!(Camera2D, zoom) - 20usize];
 };
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub struct Mesh {
     pub vertexCount: ::std::os::raw::c_int,
     pub triangleCount: ::std::os::raw::c_int,
@@ -325,8 +352,17 @@ const _: () = {
     ["Offset of field: Mesh::vaoId"][::std::mem::offset_of!(Mesh, vaoId) - 104usize];
     ["Offset of field: Mesh::vboId"][::std::mem::offset_of!(Mesh, vboId) - 112usize];
 };
+impl Default for Mesh {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
+    }
+}
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub struct Shader {
     pub id: ::std::os::raw::c_uint,
     pub locs: *mut ::std::os::raw::c_int,
@@ -338,8 +374,17 @@ const _: () = {
     ["Offset of field: Shader::id"][::std::mem::offset_of!(Shader, id) - 0usize];
     ["Offset of field: Shader::locs"][::std::mem::offset_of!(Shader, locs) - 8usize];
 };
+impl Default for Shader {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
+    }
+}
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, PartialEq)]
 pub struct MaterialMap {
     pub texture: Texture2D,
     pub color: Color,
@@ -355,7 +400,7 @@ const _: () = {
     ["Offset of field: MaterialMap::value"][::std::mem::offset_of!(MaterialMap, value) - 24usize];
 };
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub struct Material {
     pub shader: Shader,
     pub maps: *mut MaterialMap,
@@ -369,8 +414,17 @@ const _: () = {
     ["Offset of field: Material::maps"][::std::mem::offset_of!(Material, maps) - 16usize];
     ["Offset of field: Material::params"][::std::mem::offset_of!(Material, params) - 24usize];
 };
+impl Default for Material {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
+    }
+}
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, PartialEq)]
 pub struct Transform {
     pub translation: Vector3,
     pub rotation: Quaternion,
@@ -387,7 +441,7 @@ const _: () = {
 };
 pub type ModelAnimPose = *mut Transform;
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, PartialEq)]
 pub struct BoneInfo {
     pub name: [::std::os::raw::c_char; 32usize],
     pub parent: ::std::os::raw::c_int,
@@ -400,7 +454,7 @@ const _: () = {
     ["Offset of field: BoneInfo::parent"][::std::mem::offset_of!(BoneInfo, parent) - 32usize];
 };
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub struct ModelSkeleton {
     pub boneCount: ::std::os::raw::c_uint,
     pub bones: *mut BoneInfo,
@@ -417,8 +471,17 @@ const _: () = {
     ["Offset of field: ModelSkeleton::bindPose"]
         [::std::mem::offset_of!(ModelSkeleton, bindPose) - 16usize];
 };
+impl Default for ModelSkeleton {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
+    }
+}
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub struct Model {
     pub transform: Matrix,
     pub meshCount: ::std::os::raw::c_int,
@@ -446,8 +509,17 @@ const _: () = {
     ["Offset of field: Model::boneMatrices"]
         [::std::mem::offset_of!(Model, boneMatrices) - 128usize];
 };
+impl Default for Model {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
+    }
+}
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub struct ModelAnimation {
     pub name: [::std::os::raw::c_char; 32usize],
     pub boneCount: ::std::os::raw::c_uint,
@@ -467,8 +539,17 @@ const _: () = {
     ["Offset of field: ModelAnimation::keyframePoses"]
         [::std::mem::offset_of!(ModelAnimation, keyframePoses) - 40usize];
 };
+impl Default for ModelAnimation {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
+    }
+}
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, PartialEq)]
 pub struct Ray {
     pub position: Vector3,
     pub direction: Vector3,
@@ -481,7 +562,7 @@ const _: () = {
     ["Offset of field: Ray::direction"][::std::mem::offset_of!(Ray, direction) - 12usize];
 };
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, PartialEq)]
 pub struct RayCollision {
     pub hit: bool,
     pub distance: f32,
@@ -500,7 +581,7 @@ const _: () = {
         [::std::mem::offset_of!(RayCollision, normal) - 20usize];
 };
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, PartialEq)]
 pub struct BoundingBox {
     pub min: Vector3,
     pub max: Vector3,
@@ -513,7 +594,7 @@ const _: () = {
     ["Offset of field: BoundingBox::max"][::std::mem::offset_of!(BoundingBox, max) - 12usize];
 };
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub struct Wave {
     pub frameCount: ::std::os::raw::c_uint,
     pub sampleRate: ::std::os::raw::c_uint,
@@ -531,6 +612,15 @@ const _: () = {
     ["Offset of field: Wave::channels"][::std::mem::offset_of!(Wave, channels) - 12usize];
     ["Offset of field: Wave::data"][::std::mem::offset_of!(Wave, data) - 16usize];
 };
+impl Default for Wave {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
+    }
+}
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct rAudioBuffer {
@@ -542,7 +632,7 @@ pub struct rAudioProcessor {
     _unused: [u8; 0],
 }
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub struct AudioStream {
     pub buffer: *mut rAudioBuffer,
     pub processor: *mut rAudioProcessor,
@@ -564,8 +654,17 @@ const _: () = {
     ["Offset of field: AudioStream::channels"]
         [::std::mem::offset_of!(AudioStream, channels) - 24usize];
 };
+impl Default for AudioStream {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
+    }
+}
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub struct Sound {
     pub stream: AudioStream,
     pub frameCount: ::std::os::raw::c_uint,
@@ -577,8 +676,17 @@ const _: () = {
     ["Offset of field: Sound::stream"][::std::mem::offset_of!(Sound, stream) - 0usize];
     ["Offset of field: Sound::frameCount"][::std::mem::offset_of!(Sound, frameCount) - 32usize];
 };
+impl Default for Sound {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
+    }
+}
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub struct Music {
     pub stream: AudioStream,
     pub frameCount: ::std::os::raw::c_uint,
@@ -596,8 +704,17 @@ const _: () = {
     ["Offset of field: Music::ctxType"][::std::mem::offset_of!(Music, ctxType) - 40usize];
     ["Offset of field: Music::ctxData"][::std::mem::offset_of!(Music, ctxData) - 48usize];
 };
+impl Default for Music {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
+    }
+}
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, PartialEq)]
 pub struct VrDeviceInfo {
     pub hResolution: ::std::os::raw::c_int,
     pub vResolution: ::std::os::raw::c_int,
@@ -633,7 +750,7 @@ const _: () = {
         [::std::mem::offset_of!(VrDeviceInfo, chromaAbCorrection) - 44usize];
 };
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, PartialEq)]
 pub struct VrStereoConfig {
     pub projection: [Matrix; 2usize],
     pub viewOffset: [Matrix; 2usize],
@@ -666,7 +783,7 @@ const _: () = {
         [::std::mem::offset_of!(VrStereoConfig, scaleIn) - 296usize];
 };
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub struct FilePathList {
     pub count: ::std::os::raw::c_uint,
     pub paths: *mut *mut ::std::os::raw::c_char,
@@ -678,8 +795,17 @@ const _: () = {
     ["Offset of field: FilePathList::count"][::std::mem::offset_of!(FilePathList, count) - 0usize];
     ["Offset of field: FilePathList::paths"][::std::mem::offset_of!(FilePathList, paths) - 8usize];
 };
+impl Default for FilePathList {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
+    }
+}
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Default, Copy, Clone, PartialEq)]
 pub struct AutomationEvent {
     pub frame: ::std::os::raw::c_uint,
     pub type_: ::std::os::raw::c_uint,
@@ -697,7 +823,7 @@ const _: () = {
         [::std::mem::offset_of!(AutomationEvent, params) - 8usize];
 };
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub struct AutomationEventList {
     pub capacity: ::std::os::raw::c_uint,
     pub count: ::std::os::raw::c_uint,
@@ -714,175 +840,15 @@ const _: () = {
     ["Offset of field: AutomationEventList::events"]
         [::std::mem::offset_of!(AutomationEventList, events) - 8usize];
 };
-pub const TraceLogLevel_LOG_ALL: TraceLogLevel = 0;
-pub const TraceLogLevel_LOG_TRACE: TraceLogLevel = 1;
-pub const TraceLogLevel_LOG_DEBUG: TraceLogLevel = 2;
-pub const TraceLogLevel_LOG_INFO: TraceLogLevel = 3;
-pub const TraceLogLevel_LOG_WARNING: TraceLogLevel = 4;
-pub const TraceLogLevel_LOG_ERROR: TraceLogLevel = 5;
-pub const TraceLogLevel_LOG_FATAL: TraceLogLevel = 6;
-pub const TraceLogLevel_LOG_NONE: TraceLogLevel = 7;
-pub type TraceLogLevel = ::std::os::raw::c_uint;
-pub const MouseCursor_MOUSE_CURSOR_DEFAULT: MouseCursor = 0;
-pub const MouseCursor_MOUSE_CURSOR_ARROW: MouseCursor = 1;
-pub const MouseCursor_MOUSE_CURSOR_IBEAM: MouseCursor = 2;
-pub const MouseCursor_MOUSE_CURSOR_CROSSHAIR: MouseCursor = 3;
-pub const MouseCursor_MOUSE_CURSOR_POINTING_HAND: MouseCursor = 4;
-pub const MouseCursor_MOUSE_CURSOR_RESIZE_EW: MouseCursor = 5;
-pub const MouseCursor_MOUSE_CURSOR_RESIZE_NS: MouseCursor = 6;
-pub const MouseCursor_MOUSE_CURSOR_RESIZE_NWSE: MouseCursor = 7;
-pub const MouseCursor_MOUSE_CURSOR_RESIZE_NESW: MouseCursor = 8;
-pub const MouseCursor_MOUSE_CURSOR_RESIZE_ALL: MouseCursor = 9;
-pub const MouseCursor_MOUSE_CURSOR_NOT_ALLOWED: MouseCursor = 10;
-pub type MouseCursor = ::std::os::raw::c_uint;
-pub const GamepadButton_GAMEPAD_BUTTON_UNKNOWN: GamepadButton = 0;
-pub const GamepadButton_GAMEPAD_BUTTON_LEFT_FACE_UP: GamepadButton = 1;
-pub const GamepadButton_GAMEPAD_BUTTON_LEFT_FACE_RIGHT: GamepadButton = 2;
-pub const GamepadButton_GAMEPAD_BUTTON_LEFT_FACE_DOWN: GamepadButton = 3;
-pub const GamepadButton_GAMEPAD_BUTTON_LEFT_FACE_LEFT: GamepadButton = 4;
-pub const GamepadButton_GAMEPAD_BUTTON_RIGHT_FACE_UP: GamepadButton = 5;
-pub const GamepadButton_GAMEPAD_BUTTON_RIGHT_FACE_RIGHT: GamepadButton = 6;
-pub const GamepadButton_GAMEPAD_BUTTON_RIGHT_FACE_DOWN: GamepadButton = 7;
-pub const GamepadButton_GAMEPAD_BUTTON_RIGHT_FACE_LEFT: GamepadButton = 8;
-pub const GamepadButton_GAMEPAD_BUTTON_LEFT_TRIGGER_1: GamepadButton = 9;
-pub const GamepadButton_GAMEPAD_BUTTON_LEFT_TRIGGER_2: GamepadButton = 10;
-pub const GamepadButton_GAMEPAD_BUTTON_RIGHT_TRIGGER_1: GamepadButton = 11;
-pub const GamepadButton_GAMEPAD_BUTTON_RIGHT_TRIGGER_2: GamepadButton = 12;
-pub const GamepadButton_GAMEPAD_BUTTON_MIDDLE_LEFT: GamepadButton = 13;
-pub const GamepadButton_GAMEPAD_BUTTON_MIDDLE: GamepadButton = 14;
-pub const GamepadButton_GAMEPAD_BUTTON_MIDDLE_RIGHT: GamepadButton = 15;
-pub const GamepadButton_GAMEPAD_BUTTON_LEFT_THUMB: GamepadButton = 16;
-pub const GamepadButton_GAMEPAD_BUTTON_RIGHT_THUMB: GamepadButton = 17;
-pub type GamepadButton = ::std::os::raw::c_uint;
-pub const GamepadAxis_GAMEPAD_AXIS_LEFT_X: GamepadAxis = 0;
-pub const GamepadAxis_GAMEPAD_AXIS_LEFT_Y: GamepadAxis = 1;
-pub const GamepadAxis_GAMEPAD_AXIS_RIGHT_X: GamepadAxis = 2;
-pub const GamepadAxis_GAMEPAD_AXIS_RIGHT_Y: GamepadAxis = 3;
-pub const GamepadAxis_GAMEPAD_AXIS_LEFT_TRIGGER: GamepadAxis = 4;
-pub const GamepadAxis_GAMEPAD_AXIS_RIGHT_TRIGGER: GamepadAxis = 5;
-pub type GamepadAxis = ::std::os::raw::c_uint;
-pub const MaterialMapIndex_MATERIAL_MAP_ALBEDO: MaterialMapIndex = 0;
-pub const MaterialMapIndex_MATERIAL_MAP_METALNESS: MaterialMapIndex = 1;
-pub const MaterialMapIndex_MATERIAL_MAP_NORMAL: MaterialMapIndex = 2;
-pub const MaterialMapIndex_MATERIAL_MAP_ROUGHNESS: MaterialMapIndex = 3;
-pub const MaterialMapIndex_MATERIAL_MAP_OCCLUSION: MaterialMapIndex = 4;
-pub const MaterialMapIndex_MATERIAL_MAP_EMISSION: MaterialMapIndex = 5;
-pub const MaterialMapIndex_MATERIAL_MAP_HEIGHT: MaterialMapIndex = 6;
-pub const MaterialMapIndex_MATERIAL_MAP_CUBEMAP: MaterialMapIndex = 7;
-pub const MaterialMapIndex_MATERIAL_MAP_IRRADIANCE: MaterialMapIndex = 8;
-pub const MaterialMapIndex_MATERIAL_MAP_PREFILTER: MaterialMapIndex = 9;
-pub const MaterialMapIndex_MATERIAL_MAP_BRDF: MaterialMapIndex = 10;
-pub type MaterialMapIndex = ::std::os::raw::c_uint;
-pub const ShaderLocationIndex_SHADER_LOC_VERTEX_POSITION: ShaderLocationIndex = 0;
-pub const ShaderLocationIndex_SHADER_LOC_VERTEX_TEXCOORD01: ShaderLocationIndex = 1;
-pub const ShaderLocationIndex_SHADER_LOC_VERTEX_TEXCOORD02: ShaderLocationIndex = 2;
-pub const ShaderLocationIndex_SHADER_LOC_VERTEX_NORMAL: ShaderLocationIndex = 3;
-pub const ShaderLocationIndex_SHADER_LOC_VERTEX_TANGENT: ShaderLocationIndex = 4;
-pub const ShaderLocationIndex_SHADER_LOC_VERTEX_COLOR: ShaderLocationIndex = 5;
-pub const ShaderLocationIndex_SHADER_LOC_MATRIX_MVP: ShaderLocationIndex = 6;
-pub const ShaderLocationIndex_SHADER_LOC_MATRIX_VIEW: ShaderLocationIndex = 7;
-pub const ShaderLocationIndex_SHADER_LOC_MATRIX_PROJECTION: ShaderLocationIndex = 8;
-pub const ShaderLocationIndex_SHADER_LOC_MATRIX_MODEL: ShaderLocationIndex = 9;
-pub const ShaderLocationIndex_SHADER_LOC_MATRIX_NORMAL: ShaderLocationIndex = 10;
-pub const ShaderLocationIndex_SHADER_LOC_VECTOR_VIEW: ShaderLocationIndex = 11;
-pub const ShaderLocationIndex_SHADER_LOC_COLOR_DIFFUSE: ShaderLocationIndex = 12;
-pub const ShaderLocationIndex_SHADER_LOC_COLOR_SPECULAR: ShaderLocationIndex = 13;
-pub const ShaderLocationIndex_SHADER_LOC_COLOR_AMBIENT: ShaderLocationIndex = 14;
-pub const ShaderLocationIndex_SHADER_LOC_MAP_ALBEDO: ShaderLocationIndex = 15;
-pub const ShaderLocationIndex_SHADER_LOC_MAP_METALNESS: ShaderLocationIndex = 16;
-pub const ShaderLocationIndex_SHADER_LOC_MAP_NORMAL: ShaderLocationIndex = 17;
-pub const ShaderLocationIndex_SHADER_LOC_MAP_ROUGHNESS: ShaderLocationIndex = 18;
-pub const ShaderLocationIndex_SHADER_LOC_MAP_OCCLUSION: ShaderLocationIndex = 19;
-pub const ShaderLocationIndex_SHADER_LOC_MAP_EMISSION: ShaderLocationIndex = 20;
-pub const ShaderLocationIndex_SHADER_LOC_MAP_HEIGHT: ShaderLocationIndex = 21;
-pub const ShaderLocationIndex_SHADER_LOC_MAP_CUBEMAP: ShaderLocationIndex = 22;
-pub const ShaderLocationIndex_SHADER_LOC_MAP_IRRADIANCE: ShaderLocationIndex = 23;
-pub const ShaderLocationIndex_SHADER_LOC_MAP_PREFILTER: ShaderLocationIndex = 24;
-pub const ShaderLocationIndex_SHADER_LOC_MAP_BRDF: ShaderLocationIndex = 25;
-pub const ShaderLocationIndex_SHADER_LOC_VERTEX_BONEIDS: ShaderLocationIndex = 26;
-pub const ShaderLocationIndex_SHADER_LOC_VERTEX_BONEWEIGHTS: ShaderLocationIndex = 27;
-pub const ShaderLocationIndex_SHADER_LOC_MATRIX_BONETRANSFORMS: ShaderLocationIndex = 28;
-pub const ShaderLocationIndex_SHADER_LOC_VERTEX_INSTANCETRANSFORM: ShaderLocationIndex = 29;
-pub type ShaderLocationIndex = ::std::os::raw::c_uint;
-pub const ShaderUniformDataType_SHADER_UNIFORM_FLOAT: ShaderUniformDataType = 0;
-pub const ShaderUniformDataType_SHADER_UNIFORM_VEC2: ShaderUniformDataType = 1;
-pub const ShaderUniformDataType_SHADER_UNIFORM_VEC3: ShaderUniformDataType = 2;
-pub const ShaderUniformDataType_SHADER_UNIFORM_VEC4: ShaderUniformDataType = 3;
-pub const ShaderUniformDataType_SHADER_UNIFORM_INT: ShaderUniformDataType = 4;
-pub const ShaderUniformDataType_SHADER_UNIFORM_IVEC2: ShaderUniformDataType = 5;
-pub const ShaderUniformDataType_SHADER_UNIFORM_IVEC3: ShaderUniformDataType = 6;
-pub const ShaderUniformDataType_SHADER_UNIFORM_IVEC4: ShaderUniformDataType = 7;
-pub const ShaderUniformDataType_SHADER_UNIFORM_UINT: ShaderUniformDataType = 8;
-pub const ShaderUniformDataType_SHADER_UNIFORM_UIVEC2: ShaderUniformDataType = 9;
-pub const ShaderUniformDataType_SHADER_UNIFORM_UIVEC3: ShaderUniformDataType = 10;
-pub const ShaderUniformDataType_SHADER_UNIFORM_UIVEC4: ShaderUniformDataType = 11;
-pub const ShaderUniformDataType_SHADER_UNIFORM_SAMPLER2D: ShaderUniformDataType = 12;
-pub type ShaderUniformDataType = ::std::os::raw::c_uint;
-pub const ShaderAttributeDataType_SHADER_ATTRIB_FLOAT: ShaderAttributeDataType = 0;
-pub const ShaderAttributeDataType_SHADER_ATTRIB_VEC2: ShaderAttributeDataType = 1;
-pub const ShaderAttributeDataType_SHADER_ATTRIB_VEC3: ShaderAttributeDataType = 2;
-pub const ShaderAttributeDataType_SHADER_ATTRIB_VEC4: ShaderAttributeDataType = 3;
-pub type ShaderAttributeDataType = ::std::os::raw::c_uint;
-pub const PixelFormat_PIXELFORMAT_UNCOMPRESSED_GRAYSCALE: PixelFormat = 1;
-pub const PixelFormat_PIXELFORMAT_UNCOMPRESSED_GRAY_ALPHA: PixelFormat = 2;
-pub const PixelFormat_PIXELFORMAT_UNCOMPRESSED_R5G6B5: PixelFormat = 3;
-pub const PixelFormat_PIXELFORMAT_UNCOMPRESSED_R8G8B8: PixelFormat = 4;
-pub const PixelFormat_PIXELFORMAT_UNCOMPRESSED_R5G5B5A1: PixelFormat = 5;
-pub const PixelFormat_PIXELFORMAT_UNCOMPRESSED_R4G4B4A4: PixelFormat = 6;
-pub const PixelFormat_PIXELFORMAT_UNCOMPRESSED_R8G8B8A8: PixelFormat = 7;
-pub const PixelFormat_PIXELFORMAT_UNCOMPRESSED_R32: PixelFormat = 8;
-pub const PixelFormat_PIXELFORMAT_UNCOMPRESSED_R32G32B32: PixelFormat = 9;
-pub const PixelFormat_PIXELFORMAT_UNCOMPRESSED_R32G32B32A32: PixelFormat = 10;
-pub const PixelFormat_PIXELFORMAT_UNCOMPRESSED_R16: PixelFormat = 11;
-pub const PixelFormat_PIXELFORMAT_UNCOMPRESSED_R16G16B16: PixelFormat = 12;
-pub const PixelFormat_PIXELFORMAT_UNCOMPRESSED_R16G16B16A16: PixelFormat = 13;
-pub const PixelFormat_PIXELFORMAT_COMPRESSED_DXT1_RGB: PixelFormat = 14;
-pub const PixelFormat_PIXELFORMAT_COMPRESSED_DXT1_RGBA: PixelFormat = 15;
-pub const PixelFormat_PIXELFORMAT_COMPRESSED_DXT3_RGBA: PixelFormat = 16;
-pub const PixelFormat_PIXELFORMAT_COMPRESSED_DXT5_RGBA: PixelFormat = 17;
-pub const PixelFormat_PIXELFORMAT_COMPRESSED_ETC1_RGB: PixelFormat = 18;
-pub const PixelFormat_PIXELFORMAT_COMPRESSED_ETC2_RGB: PixelFormat = 19;
-pub const PixelFormat_PIXELFORMAT_COMPRESSED_ETC2_EAC_RGBA: PixelFormat = 20;
-pub const PixelFormat_PIXELFORMAT_COMPRESSED_PVRT_RGB: PixelFormat = 21;
-pub const PixelFormat_PIXELFORMAT_COMPRESSED_PVRT_RGBA: PixelFormat = 22;
-pub const PixelFormat_PIXELFORMAT_COMPRESSED_ASTC_4x4_RGBA: PixelFormat = 23;
-pub const PixelFormat_PIXELFORMAT_COMPRESSED_ASTC_8x8_RGBA: PixelFormat = 24;
-pub type PixelFormat = ::std::os::raw::c_uint;
-pub const CubemapLayout_CUBEMAP_LAYOUT_AUTO_DETECT: CubemapLayout = 0;
-pub const CubemapLayout_CUBEMAP_LAYOUT_LINE_VERTICAL: CubemapLayout = 1;
-pub const CubemapLayout_CUBEMAP_LAYOUT_LINE_HORIZONTAL: CubemapLayout = 2;
-pub const CubemapLayout_CUBEMAP_LAYOUT_CROSS_THREE_BY_FOUR: CubemapLayout = 3;
-pub const CubemapLayout_CUBEMAP_LAYOUT_CROSS_FOUR_BY_THREE: CubemapLayout = 4;
-pub type CubemapLayout = ::std::os::raw::c_uint;
-pub const FontType_FONT_DEFAULT: FontType = 0;
-pub const FontType_FONT_BITMAP: FontType = 1;
-pub const FontType_FONT_SDF: FontType = 2;
-pub type FontType = ::std::os::raw::c_uint;
-pub const Gesture_GESTURE_NONE: Gesture = 0;
-pub const Gesture_GESTURE_TAP: Gesture = 1;
-pub const Gesture_GESTURE_DOUBLETAP: Gesture = 2;
-pub const Gesture_GESTURE_HOLD: Gesture = 4;
-pub const Gesture_GESTURE_DRAG: Gesture = 8;
-pub const Gesture_GESTURE_SWIPE_RIGHT: Gesture = 16;
-pub const Gesture_GESTURE_SWIPE_LEFT: Gesture = 32;
-pub const Gesture_GESTURE_SWIPE_UP: Gesture = 64;
-pub const Gesture_GESTURE_SWIPE_DOWN: Gesture = 128;
-pub const Gesture_GESTURE_PINCH_IN: Gesture = 256;
-pub const Gesture_GESTURE_PINCH_OUT: Gesture = 512;
-pub type Gesture = ::std::os::raw::c_uint;
-pub const CameraMode_CAMERA_CUSTOM: CameraMode = 0;
-pub const CameraMode_CAMERA_FREE: CameraMode = 1;
-pub const CameraMode_CAMERA_ORBITAL: CameraMode = 2;
-pub const CameraMode_CAMERA_FIRST_PERSON: CameraMode = 3;
-pub const CameraMode_CAMERA_THIRD_PERSON: CameraMode = 4;
-pub type CameraMode = ::std::os::raw::c_uint;
-pub const CameraProjection_CAMERA_PERSPECTIVE: CameraProjection = 0;
-pub const CameraProjection_CAMERA_ORTHOGRAPHIC: CameraProjection = 1;
-pub type CameraProjection = ::std::os::raw::c_uint;
-pub const NPatchLayout_NPATCH_NINE_PATCH: NPatchLayout = 0;
-pub const NPatchLayout_NPATCH_THREE_PATCH_VERTICAL: NPatchLayout = 1;
-pub const NPatchLayout_NPATCH_THREE_PATCH_HORIZONTAL: NPatchLayout = 2;
-pub type NPatchLayout = ::std::os::raw::c_uint;
+impl Default for AutomationEventList {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
+    }
+}
 pub type TraceLogCallback = ::std::option::Option<
     unsafe extern "C" fn(
         logLevel: ::std::os::raw::c_int,
@@ -3856,7 +3822,7 @@ unsafe extern "C" {
 }
 pub type __builtin_va_list = [__va_list_tag; 1usize];
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub struct __va_list_tag {
     pub gp_offset: ::std::os::raw::c_uint,
     pub fp_offset: ::std::os::raw::c_uint,
@@ -3876,3 +3842,12 @@ const _: () = {
     ["Offset of field: __va_list_tag::reg_save_area"]
         [::std::mem::offset_of!(__va_list_tag, reg_save_area) - 16usize];
 };
+impl Default for __va_list_tag {
+    fn default() -> Self {
+        let mut s = ::std::mem::MaybeUninit::<Self>::uninit();
+        unsafe {
+            ::std::ptr::write_bytes(s.as_mut_ptr(), 0, 1);
+            s.assume_init()
+        }
+    }
+}
