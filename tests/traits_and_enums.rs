@@ -288,3 +288,19 @@ fn test_matrix_helpers_and_multiplication() {
     assert_eq!(basis.m7, 20.0);
     assert_eq!(basis.m11, 30.0);
 }
+
+#[test]
+fn test_color_lerp() {
+    let black = Color { r: 0, g: 0, b: 0, a: 255 };
+    let white = Color { r: 255, g: 255, b: 255, a: 255 };
+
+    let gray = black.lerp(white, 0.5);
+    assert_eq!(gray.r, 128);
+    assert_eq!(gray.g, 128);
+    assert_eq!(gray.b, 128);
+    assert_eq!(gray.a, 255);
+
+    // Clamp behavior
+    assert_eq!(black.lerp(white, -1.0), black);
+    assert_eq!(black.lerp(white, 2.0), white);
+}

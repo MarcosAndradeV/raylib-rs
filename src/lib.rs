@@ -141,16 +141,30 @@ pub fn draw_rectangle_lines_ex(rec: Rectangle, line_thick: f32, color: Color) {
     unsafe { DrawRectangleLinesEx(rec, line_thick, color) }
 }
 
-pub fn draw_text(text: CString, pos_x: i32, pos_y: i32, font_size: i32, color: Color) {
-    unsafe { DrawText(text.as_ptr(), pos_x, pos_y, font_size, color) }
+pub fn draw_text(text: impl AsRef<str>, pos_x: i32, pos_y: i32, font_size: i32, color: Color) {
+    if let Ok(c_text) = CString::new(text.as_ref()) {
+        unsafe { DrawText(c_text.as_ptr(), pos_x, pos_y, font_size, color) }
+    }
 }
 
-pub fn measure_text(text: CString, font_size: i32) -> i32 {
-    unsafe { MeasureText(text.as_ptr(), font_size) }
+pub fn measure_text(text: impl AsRef<str>, font_size: i32) -> i32 {
+    if let Ok(c_text) = CString::new(text.as_ref()) {
+        unsafe { MeasureText(c_text.as_ptr(), font_size) }
+    } else {
+        0
+    }
 }
 
 pub fn measure_text_ex(font: Font, text: CString, fontSize: f32, spacing: f32) -> Vector2 {
     unsafe { MeasureTextEx(font, text.as_ptr(), fontSize, spacing) }
+}
+
+pub fn measure_text_ex_str(font: Font, text: impl AsRef<str>, font_size: f32, spacing: f32) -> Vector2 {
+    if let Ok(c_text) = CString::new(text.as_ref()) {
+        unsafe { MeasureTextEx(font, c_text.as_ptr(), font_size, spacing) }
+    } else {
+        Vector2 { x: 0.0, y: 0.0 }
+    }
 }
 
 pub fn load_texture(path: CString) -> Texture {
@@ -185,6 +199,21 @@ pub fn draw_text_ex(
 ) {
     unsafe {
         DrawTextEx(font, text.as_ptr(), position, font_size, spacing, tint);
+    }
+}
+
+pub fn draw_text_ex_str(
+    font: Font,
+    text: impl AsRef<str>,
+    position: Vector2,
+    font_size: f32,
+    spacing: f32,
+    tint: Color,
+) {
+    if let Ok(c_text) = CString::new(text.as_ref()) {
+        unsafe {
+            DrawTextEx(font, c_text.as_ptr(), position, font_size, spacing, tint);
+        }
     }
 }
 pub fn is_cursor_on_screen() -> bool {
@@ -732,3 +761,42 @@ pub fn set_config_flags(flags: &[ConfigFlags]) {
         SetConfigFlags(flags);
     }
 }
+
+impl Color {
+    /// Linearly interpolates between `self` and `target` by `factor` in `[0.0, 1.0]`.
+    pub fn lerp(&self, target: Color, factor: f32) -> Color {
+        let f = factor.clamp(0.0, 1.0);
+        Color {
+            r: (self.r as f32 + (target.r as f32 - self.r as f32) * f).round() as u8,
+            g: (self.g as f32 + (target.g as f32 - self.g as f32) * f).round() as u8,
+            b: (self.b as f32 + (target.b as f32 - self.b as f32) * f).round() as u8,
+            a: (self.a as f32 + (target.a as f32 - self.a as f32) * f).round() as u8,
+        }
+    }
+}
+
+/// Draws a texture in 3D space facing the camera.
+pub fn draw_billboard(
+    camera: Camera3D,
+    texture: Texture2D,
+    position: Vector3,
+    size: f32,
+    tint: Color,
+) {
+    unsafe {
+        DrawBillboard(camera, texture, position, size, tint);
+    }
+}
+
+/// Converts a 3D world position to 2D screen coordinates with custom viewport width and height.
+pub fn get_world_to_screen_ex(
+    position: Vector3,
+    camera: Camera3D,
+    width: i32,
+    height: i32,
+) -> Vector2 {
+    unsafe {
+        GetWorldToScreenEx(position, camera, width, height)
+    }
+}
+
