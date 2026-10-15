@@ -207,3 +207,84 @@ fn test_enums_reimplemented_values_and_traits() {
     assert_eq!(NPATCH_NINE_PATCH as i32, 0);
     assert_eq!(NPATCH_THREE_PATCH_HORIZONTAL as i32, 2);
 }
+
+#[test]
+fn test_vector2_math_and_scalar_traits() {
+    let a = Vector2::new(3.0, 4.0);
+    let b = Vector2::new(1.0, 2.0);
+
+    assert_eq!(a + b, Vector2::new(4.0, 6.0));
+    assert_eq!(a - b, Vector2::new(2.0, 2.0));
+    assert_eq!(a * b, Vector2::new(3.0, 8.0));
+    assert_eq!(a * 2.0, Vector2::new(6.0, 8.0));
+    assert_eq!(2.0 * a, Vector2::new(6.0, 8.0));
+    assert_eq!(a / 2.0, Vector2::new(1.5, 2.0));
+    assert_eq!(-a, Vector2::new(-3.0, -4.0));
+
+    assert_eq!(a.dot(b), 3.0 * 1.0 + 4.0 * 2.0);
+    assert_eq!(a.length_sq(), 25.0);
+    assert_eq!(a.length(), 5.0);
+    assert_eq!(a.normalize(), Vector2::new(0.6, 0.8));
+    assert_eq!(a.distance(Vector2::new(0.0, 0.0)), 5.0);
+    assert_eq!(a.lerp(Vector2::new(5.0, 6.0), 0.5), Vector2::new(4.0, 5.0));
+}
+
+#[test]
+fn test_vector3_math_and_operators() {
+    let a = Vector3::new(1.0, 2.0, 3.0);
+    let b = Vector3::new(4.0, 5.0, 6.0);
+
+    // Addition, subtraction, element-wise multiplication
+    assert_eq!(a + b, Vector3::new(5.0, 7.0, 9.0));
+    assert_eq!(b - a, Vector3::new(3.0, 3.0, 3.0));
+    assert_eq!(a * b, Vector3::new(4.0, 10.0, 18.0));
+    assert_eq!(b / a, Vector3::new(4.0, 2.5, 2.0));
+
+    // Scalar ops
+    assert_eq!(a * 2.0, Vector3::new(2.0, 4.0, 6.0));
+    assert_eq!(3.0 * a, Vector3::new(3.0, 6.0, 9.0));
+    assert_eq!(a / 2.0, Vector3::new(0.5, 1.0, 1.5));
+    assert_eq!(-a, Vector3::new(-1.0, -2.0, -3.0));
+
+    // Dot and cross product
+    assert_eq!(a.dot(b), 1.0 * 4.0 + 2.0 * 5.0 + 3.0 * 6.0); // 4 + 10 + 18 = 32
+    let x_axis = Vector3::new(1.0, 0.0, 0.0);
+    let y_axis = Vector3::new(0.0, 1.0, 0.0);
+    let z_axis = x_axis.cross(y_axis);
+    assert_eq!(z_axis, Vector3::new(0.0, 0.0, 1.0));
+
+    // Length, normalize, distance, lerp
+    let v = Vector3::new(0.0, 3.0, 4.0);
+    assert_eq!(v.length_sq(), 25.0);
+    assert_eq!(v.length(), 5.0);
+    assert_eq!(v.normalize(), Vector3::new(0.0, 0.6, 0.8));
+    assert_eq!(v.distance(Vector3::zero()), 5.0);
+    assert_eq!(Vector3::zero().lerp(Vector3::new(10.0, 20.0, 30.0), 0.5), Vector3::new(5.0, 10.0, 15.0));
+}
+
+#[test]
+fn test_matrix_helpers_and_multiplication() {
+    let identity = Matrix::identity();
+    assert_eq!(identity.m0, 1.0);
+    assert_eq!(identity.m5, 1.0);
+    assert_eq!(identity.m10, 1.0);
+    assert_eq!(identity.m15, 1.0);
+    assert_eq!(identity.m1, 0.0);
+
+    // Identity multiplied by identity is identity
+    let mul_id = identity * identity;
+    assert_eq!(mul_id, identity);
+
+    // Basis matrix
+    let right = Vector3::new(1.0, 0.0, 0.0);
+    let up = Vector3::new(0.0, 1.0, 0.0);
+    let forward = Vector3::new(0.0, 0.0, 1.0);
+    let pos = Vector3::new(10.0, 20.0, 30.0);
+    let basis = Matrix::from_basis(right, up, forward, pos);
+    assert_eq!(basis.m0, 1.0);
+    assert_eq!(basis.m5, 1.0);
+    assert_eq!(basis.m10, 1.0);
+    assert_eq!(basis.m3, 10.0);
+    assert_eq!(basis.m7, 20.0);
+    assert_eq!(basis.m11, 30.0);
+}
