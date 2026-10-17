@@ -3,9 +3,14 @@ set -euo pipefail
 
 # Script directory
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-RAYLIB_SRC_DIR="${SCRIPT_DIR}/raylib-patch"
+RAYLIB_SRC_DIR="${RAYLIB_SRC_DIR:-${SCRIPT_DIR}/raylib-patch}"
 BUILD_DIR="${RAYLIB_SRC_DIR}/build"
 DEST_DIR="${SCRIPT_DIR}/raylib-6.0_linux_amd64"
+
+if [ ! -d "${RAYLIB_SRC_DIR}" ]; then
+    echo "=== Cloning Raylib repository into ${RAYLIB_SRC_DIR} ==="
+    git clone --depth 1 https://github.com/raysan5/raylib.git "${RAYLIB_SRC_DIR}"
+fi
 
 echo "=== Building Raylib static library with JPG support and -fPIC ==="
 
@@ -27,11 +32,15 @@ cmake -B "${BUILD_DIR}" -S "${RAYLIB_SRC_DIR}" \
     -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
     -DWITH_PIC=ON \
     -DCUSTOMIZE_BUILD=ON \
-    -DSUPPORT_FILEFORMAT_JPG=ON \
+    -DSUPPORT_FILEFORMAT_JPG="${SUPPORT_FILEFORMAT_JPG:-ON}" \
+    -DSUPPORT_FILEFORMAT_TGA="${SUPPORT_FILEFORMAT_TGA:-OFF}" \
+    -DSUPPORT_FILEFORMAT_HDR="${SUPPORT_FILEFORMAT_HDR:-OFF}" \
+    -DSUPPORT_FILEFORMAT_PSD="${SUPPORT_FILEFORMAT_PSD:-OFF}" \
+    -DSUPPORT_FILEFORMAT_FLAC="${SUPPORT_FILEFORMAT_FLAC:-OFF}" \
     -DBUILD_EXAMPLES=OFF
 
 # Build Raylib static library
-cmake --build "${BUILD_DIR}" --config Release
+cmake --build "${BUILD_DIR}" --config Release --parallel
 
 echo "=== Copying built artifacts to ${DEST_DIR} ==="
 
@@ -55,16 +64,13 @@ if [ -z "${LIB_PATH}" ]; then
     exit 1
 fi
 
-# Copy libraylib.a to destination lib directory and destination root
+# Copy libraylib.a to destination lib directory
 cp -v "${LIB_PATH}" "${DEST_DIR}/lib/libraylib.a"
-cp -v "${LIB_PATH}" "${DEST_DIR}/libraylib.a"
-cp -v "${LIB_PATH}" "${DEST_DIR}/raylib.a"
 
-# Copy header (.h) files from raylib-patch/src and raylib-patch/build/raylib/include
+# Copy header (.h) files to destination include directory
 cp -v "${RAYLIB_SRC_DIR}"/src/*.h "${DEST_DIR}/include/"
 if [ -d "${BUILD_DIR}/raylib/include" ]; then
     cp -v "${BUILD_DIR}"/raylib/include/*.h "${DEST_DIR}/include/"
 fi
-cp -v "${RAYLIB_SRC_DIR}"/src/*.h "${DEST_DIR}/"
 
 echo "=== Raylib build and copy completed successfully! ==="

@@ -2,6 +2,125 @@
 name = "raylib"
 version = "0.1.0"
 edition = "2024"
+description = "Safe and ergonomic Rust bindings for Raylib 6.0"
+license = "MIT"
+
+[features]
+default = [
+    "module_shapes",
+    "module_textures",
+    "module_text",
+    "module_models",
+    "module_audio",
+    # Default enabled image formats (including JPG)
+    "png",
+    "bmp",
+    "jpg",
+    "gif",
+    "qoi",
+    "dds",
+    "image_export",
+    "image_generation",
+    # Default enabled font formats
+    "ttf",
+    "fnt",
+    # Default enabled model formats
+    "obj",
+    "mtl",
+    "iqm",
+    "gltf",
+    "vox",
+    "m3d",
+    "mesh_generation",
+    # Default enabled audio formats
+    "wav",
+    "ogg",
+    "mp3",
+    "qoa",
+    "xm",
+    "mod",
+    # Default core features
+    "tracelog",
+    "camera_system",
+    "gestures_system",
+    "rprand_generator",
+    "mouse_gestures",
+    "screen_capture",
+    "compression_api",
+    "automation_events",
+    "clipboard_image",
+    "x11",
+]
+
+# Force building Raylib from C source via CMake in build.rs
+from_source = []
+
+# Display backends (Linux)
+x11 = []
+wayland = []
+
+# Raylib Modules
+module_shapes = []
+module_textures = []
+module_text = ["module_textures"]
+module_models = []
+module_audio = []
+
+# Image File Formats (rtextures)
+png = ["module_textures"]
+bmp = ["module_textures"]
+tga = ["module_textures"]
+jpg = ["module_textures"]
+gif = ["module_textures"]
+qoi = ["module_textures"]
+psd = ["module_textures"]
+dds = ["module_textures"]
+hdr = ["module_textures"]
+pic = ["module_textures"]
+pnm = ["module_textures"]
+ktx = ["module_textures"]
+astc = ["module_textures"]
+pkm = ["module_textures"]
+pvr = ["module_textures"]
+svg = ["module_textures"]
+image_export = ["module_textures"]
+image_generation = ["module_textures"]
+
+# Font File Formats (rtext)
+ttf = ["module_text"]
+fnt = ["module_text"]
+bdf = ["module_text"]
+
+# Model File Formats & Features (rmodels)
+obj = ["module_models"]
+mtl = ["module_models"]
+iqm = ["module_models"]
+gltf = ["module_models"]
+vox = ["module_models"]
+m3d = ["module_models"]
+mesh_generation = ["module_models"]
+gpu_skinning = ["module_models"]
+
+# Audio File Formats (raudio)
+wav = ["module_audio"]
+ogg = ["module_audio"]
+mp3 = ["module_audio"]
+qoa = ["module_audio"]
+flac = ["module_audio"]
+xm = ["module_audio"]
+mod = ["module_audio"]
+
+# Core / Advanced Flags (rcore)
+tracelog = []
+camera_system = []
+gestures_system = []
+rprand_generator = []
+mouse_gestures = []
+screen_capture = ["png"]
+compression_api = []
+automation_events = []
+custom_frame_control = []
+clipboard_image = ["bmp", "png", "jpg"]
 
 [dependencies]
 
