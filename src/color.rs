@@ -188,6 +188,30 @@ impl Color {
         }
     }
 
+    pub const fn from_hsv(hue: f32, saturation: f32, value: f32) -> Color {
+        Color {
+            r: {
+                let k = (5.0 + hue / 60.0) % 6.0;
+                let t = 4.0 - k;
+                let k = t.min(k).clamp(0.0, 1.0);
+                ((value - value * saturation * k) * 255.0) as u8
+            },
+            g: {
+                let k = (3.0 + hue / 60.0) % 6.0;
+                let t = 4.0 - k;
+                let k = t.min(k).clamp(0.0, 1.0);
+                ((value - value * saturation * k) * 255.0) as u8
+            },
+            b: {
+                let k = (1.0 + hue / 60.0) % 6.0;
+                let t = 4.0 - k;
+                let k = t.min(k).clamp(0.0, 1.0);
+                ((value - value * saturation * k) * 255.0) as u8
+            },
+            a: 255,
+        }
+    }
+
     pub fn alpha(mut self, mut alpha: f32) -> Self {
         if alpha < 0.0 {
             alpha = 0.0;
