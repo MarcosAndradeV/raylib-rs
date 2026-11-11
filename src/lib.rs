@@ -5,6 +5,7 @@
 pub mod audio;
 pub mod color;
 pub mod core;
+pub mod d3;
 pub mod enums;
 pub mod generated;
 pub mod math;
@@ -17,6 +18,7 @@ pub mod textures;
 pub use audio::*;
 pub use color::*;
 pub use core::*;
+pub use d3::*;
 pub use enums::*;
 pub use generated::*;
 pub use math::*;
@@ -24,6 +26,89 @@ pub use models::*;
 pub use shapes::*;
 pub use text::*;
 pub use textures::*;
+
+/// Hardware cursor visibility and capture modes.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+pub enum CursorMode {
+    /// Standard visible OS cursor (default).
+    #[default]
+    Normal,
+    /// Cursor is hidden while hovering over the window, but not locked.
+    Hidden,
+    /// Cursor is hidden and locked to the window for continuous 3D mouselook.
+    Captured,
+}
+
+/// Safely applies a [`CursorMode`] (`Normal`, `Hidden`, or `Captured`) when the window is initialized.
+pub fn set_cursor_mode(mode: CursorMode) {
+    if is_window_ready() {
+        match mode {
+            CursorMode::Normal => {
+                enable_cursor();
+                show_cursor();
+            }
+            CursorMode::Hidden => {
+                enable_cursor();
+                hide_cursor();
+            }
+            CursorMode::Captured => {
+                disable_cursor();
+            }
+        }
+    }
+}
+
+/// Safely disables the default `KEY_ESCAPE` window-close behavior so `KEY_ESCAPE` can be used for in-game pause menus.
+pub fn disable_exit_key() {
+    set_exit_key(KeyboardKey::KEY_NULL);
+}
+
+/// Safe wrapper around Raylib's `TraceLog`.
+pub fn trace_log(level: TraceLogLevel, message: &str) {
+    let c_msg = std::ffi::CString::new(message).unwrap_or_default();
+    unsafe {
+        TraceLog(
+            level as std::os::raw::c_int,
+            c"%s".as_ptr(),
+            c_msg.as_ptr(),
+        );
+    }
+}
+
+#[macro_export]
+macro_rules! log_info {
+    ($($arg:tt)*) => {
+        $crate::trace_log($crate::LOG_INFO, &format!($($arg)*))
+    };
+}
+
+#[macro_export]
+macro_rules! log_warn {
+    ($($arg:tt)*) => {
+        $crate::trace_log($crate::LOG_WARNING, &format!($($arg)*))
+    };
+}
+
+#[macro_export]
+macro_rules! log_error {
+    ($($arg:tt)*) => {
+        $crate::trace_log($crate::LOG_ERROR, &format!($($arg)*))
+    };
+}
+
+#[macro_export]
+macro_rules! log_debug {
+    ($($arg:tt)*) => {
+        $crate::trace_log($crate::LOG_DEBUG, &format!($($arg)*))
+    };
+}
+
+#[macro_export]
+macro_rules! log_trace {
+    ($($arg:tt)*) => {
+        $crate::trace_log($crate::LOG_TRACE, &format!($($arg)*))
+    };
+}
 
 /// Convenience prelude module re-exporting all safe Raylib wrappers, types, enums, and colors.
 pub mod prelude {

@@ -1,8 +1,8 @@
 [package]
 name = "raylib"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2024"
-description = "Safe and ergonomic Rust bindings for Raylib 6.0"
+description = "Safe and ergonomic Rust bindings for Raylib 6.0 with RAII 3D rendering (draw_3d), matrix stack guards, and retained VAO/VBO GpuMesh"
 license = "MIT"
 
 [features]
